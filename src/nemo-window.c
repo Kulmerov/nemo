@@ -1138,10 +1138,6 @@ nemo_window_key_press_event (GtkWidget *widget,
 		}
 	}
 
-    if (event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
-        handle_alt_menu_key (window, FALSE);
-    }
-
 	return GTK_WIDGET_CLASS (nemo_window_parent_class)->key_press_event (widget, event);
 }
 
@@ -1149,12 +1145,6 @@ static gboolean
 nemo_window_key_release_event (GtkWidget *widget,
                              GdkEventKey *event)
 {
-    NemoWindow *window = NEMO_WINDOW (widget);
-
-    if (event->keyval == GDK_KEY_Alt_L || event->keyval == GDK_KEY_Alt_R) {
-        handle_alt_menu_key (window, TRUE);
-    }
-
     return GTK_WIDGET_CLASS (nemo_window_parent_class)->key_release_event (widget, event);
 }
 

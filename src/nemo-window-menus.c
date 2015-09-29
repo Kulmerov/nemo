@@ -1256,7 +1256,7 @@ static const GtkActionEntry main_entries[] = {
 
 static const GtkToggleActionEntry main_toggle_entries[] = {
   /* name, stock id */         { "Show Hidden Files", NULL,
-  /* label, accelerator */       N_("Show _Hidden Files"), "<control>H",
+  /* label, accelerator */       N_("Show _Hidden Files"), NULL,
   /* tooltip */                  N_("Toggle the display of hidden files in the current window"),
                                  G_CALLBACK (action_show_hidden_files_callback),
                                  TRUE },

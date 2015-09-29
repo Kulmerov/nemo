@@ -1090,6 +1090,30 @@ handle_alt_menu_key (NemoWindow *window,
     }
 }
 
+NemoWindowShowHiddenFilesMode
+nemo_window_get_hidden_files_mode (NemoWindow *window)
+{
+	return window->details->show_hidden_files_mode;
+}
+
+void
+nemo_window_set_hidden_files_mode (NemoWindow *window,
+				       NemoWindowShowHiddenFilesMode  mode)
+{
+	window->details->show_hidden_files_mode = mode;
+    g_settings_set_boolean (nemo_preferences, NEMO_PREFERENCES_SHOW_HIDDEN_FILES,
+                            mode == NEMO_WINDOW_SHOW_HIDDEN_FILES_ENABLE);
+	g_signal_emit_by_name (window, "hidden_files_mode_changed");
+}
+
+void
+nemo_window_temporarily_set_hidden_files_mode (NemoWindow *window,
+				       NemoWindowShowHiddenFilesMode  mode)
+{
+	window->details->show_hidden_files_mode = mode;
+	g_signal_emit_by_name (window, "hidden_files_mode_changed");
+}
+
 static gboolean
 nemo_window_key_press_event (GtkWidget *widget,
 				 GdkEventKey *event)
@@ -1145,6 +1169,14 @@ static gboolean
 nemo_window_key_release_event (GtkWidget *widget,
                              GdkEventKey *event)
 {
+	NemoWindow *window = NEMO_WINDOW (widget);
+  	if (event->keyval == GDK_KEY_H || event->keyval == GDK_KEY_h) {
+		if (event->state & GDK_CONTROL_MASK) {
+			NemoWindowShowHiddenFilesMode current_mode = nemo_window_get_hidden_files_mode(window);
+			NemoWindowShowHiddenFilesMode new_mode = current_mode == NEMO_WINDOW_SHOW_HIDDEN_FILES_ENABLE;
+			nemo_window_temporarily_set_hidden_files_mode(window, new_mode);
+		}
+	}
     return GTK_WIDGET_CLASS (nemo_window_parent_class)->key_release_event (widget, event);
 }
 
@@ -1816,22 +1848,6 @@ nemo_window_get_slot_for_view (NemoWindow *window,
 	}
 
 	return NULL;
-}
-
-NemoWindowShowHiddenFilesMode
-nemo_window_get_hidden_files_mode (NemoWindow *window)
-{
-	return window->details->show_hidden_files_mode;
-}
-
-void
-nemo_window_set_hidden_files_mode (NemoWindow *window,
-				       NemoWindowShowHiddenFilesMode  mode)
-{
-	window->details->show_hidden_files_mode = mode;
-    g_settings_set_boolean (nemo_preferences, NEMO_PREFERENCES_SHOW_HIDDEN_FILES,
-                            mode == NEMO_WINDOW_SHOW_HIDDEN_FILES_ENABLE);
-	g_signal_emit_by_name (window, "hidden_files_mode_changed");
 }
 
 NemoWindowSlot *
